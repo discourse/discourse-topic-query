@@ -1,0 +1,11 @@
+plugins:
+  discourse_topic_query_enabled:
+    default: false
+    client: true
+  discourse_topic_query_allowed_on_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: "trust_level_3|trust_level_4"
+    allow_any: false
+    refresh: true

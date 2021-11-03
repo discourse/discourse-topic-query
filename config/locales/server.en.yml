@@ -1,0 +1,4 @@
+en:
+  site_settings:
+    discourse_topic_query_enabled: Enables `[topics][/topics]` markdown block.
+    discourse_topic_query_allowed_on_groups: Limits `[topics][/topics]` markdown block to specified groups. Staff is always allowed.
