@@ -1,0 +1,38 @@
+.discourse-topic-query {
+  padding-bottom: 1em;
+
+  ul {
+    margin: 0;
+    padding-left: 0;
+
+    &.force-list {
+      li {
+        list-style: inherit;
+      }
+
+      padding-left: 1.25em;
+    }
+  }
+
+  ul li {
+    list-style: none;
+    flex-direction: column;
+    margin-bottom: 0.5em;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .first-line,
+    .second-line {
+      display: flex;
+      align-items: center;
+    }
+
+    .second-line {
+      .discourse-tags {
+        font-size: var(--font-down-1);
+      }
+    }
+  }
+}
