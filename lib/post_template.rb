@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiscourseTopicQuery
   class PostTemplate
     def initialize(post, grouped_search, options = {})
