@@ -1,4 +1,4 @@
 en:
   site_settings:
-    discourse_topic_query_allowed_on_groups: "Limits `[query][/query]` markdown block to specified groups. Staff is always allowed."
-    discourse_topic_query_enabled: "Enables `[query][/query]` markdown block."
+    discourse_topic_query_allowed_on_groups: "Limits `[query=query ...params]` markdown block to specified groups. Staff is always allowed."
+    discourse_topic_query_enabled: "Enables `[query=query ...params]` markdown block."
