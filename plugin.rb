@@ -1,28 +1,19 @@
 # frozen_string_literal: true
 
 # name: discourse-topic-query
-# about: Allows to list specific topics in a post using [topics params][/topics] block
+# about: Allows to list specific topics in a post using [query params][/query] block
 # version: 0.0.1
 # authors: j.jaffeux
 # required_version: 2.7.0
 # transpile_js: true
 
 enabled_site_setting :discourse_topic_query_enabled
+register_asset 'stylesheets/common.scss'
 
 after_initialize do
   module ::DiscourseTopicQuery
     PLUGIN_NAME ||= "discourse-topic-query"
     HAS_TOPIC_QUERY ||= :has_topic_query
-    VALID_ATTRIBUTES ||= {
-      'tags' => { type: :array },
-      'topicids' => { type: :array, mapping: :topic_ids },
-      'excepttopicids' => { type: :array, mapping: :except_topic_ids },
-      'ascending' => { type: :string },
-      'order' => { type: :string },
-      'status' => { type: :string },
-      'assigned' => { type: :string },
-      'category' => { type: :string },
-    }
 
     class Engine < ::Rails::Engine
       engine_name PLUGIN_NAME
@@ -46,6 +37,10 @@ after_initialize do
     end
   end
 
+  %w[../lib/post_template.rb].each do |path|
+    load File.expand_path(path, __FILE__)
+  end
+
   register_post_custom_field_type(DiscourseTopicQuery::HAS_TOPIC_QUERY, :boolean)
 
   add_to_class(:user, :can_use_discourse_topic_query?) do
@@ -62,33 +57,51 @@ after_initialize do
   end
 
   on(:before_post_process_cooked) do |doc, post|
+    next if !post.user
+
     topic_queries = doc.css('.discourse-topic-query')
     topic_queries.each do |fragment|
       if !post&.user&.can_use_discourse_topic_query?
         next
       end
 
-      options = { limit: 20 }
-      DiscourseTopicQuery::VALID_ATTRIBUTES.each do |attribute, params|
-        value = fragment.attributes["data-#{attribute}"]&.value
-        attribute = params[:mapping] || attribute.to_sym
-        if value
-          case params[:type]
-          when :array
-            options[attribute] = value.split(',')
-          when :string
-            options[attribute] = value
-          end
+      query = fragment.attributes['data-query']&.value
+
+      if !query
+        next
+      end
+
+      hide_tags = fragment.attributes['data-hide-tags']&.value == 'true'
+      hide_category = fragment.attributes['data-hide-category']&.value == 'true'
+
+      excerpt_length = (fragment.attributes['data-excerpt-length']&.value || 200).to_i
+      excerpt_length = [excerpt_length, 300].min
+
+      search = Search.new(query, guardian: Guardian.new(post.user), blurb_length: excerpt_length)
+      grouped_results = search.execute
+
+      if !grouped_results
+        next
+      end
+
+      results = grouped_results.posts.map do |found_post|
+        if found_post == post
+          next
         end
+
+        DiscourseTopicQuery::PostTemplate.new(
+          found_post,
+          grouped_results,
+          excerpt_length: excerpt_length,
+          hide_tags: hide_tags,
+          hide_category: hide_category,
+        ).build
       end
 
-      query = TopicQuery.new(post.user, options)
-      topics_list = query.latest_results.map do |topic|
-        "<li><a href=\"#{topic.url}\">#{topic.title}</a></li>"
-      end
-
-      if topics_list.count > 0
-        fragment.inner_html = "<ul>#{topics_list.join}</ul>"
+      if results.count > 0
+        classes = []
+        classes << "force-list" if excerpt_length == 0
+        fragment.inner_html = "<ul class=\"#{classes.join(" ")}\">#{results.join}</ul>"
       end
     end
 
