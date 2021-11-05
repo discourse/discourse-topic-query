@@ -7,6 +7,7 @@ function queryRule(buffer, matches, state) {
     hideTags: null,
     hideCategory: null,
     excerptLength: null,
+    annotate: null,
   };
 
   const matchString = matches[1].replace(/‘|’|„|“|«|»|”/g, '"');
@@ -21,6 +22,7 @@ function queryRule(buffer, matches, state) {
   config.hideTags = parsed.attrs.hideTags;
   config.hideCategory = parsed.attrs.hideCategory;
   config.excerptLength = parsed.attrs.excerptLength;
+  config.annotate = parsed.attrs.annotate;
 
   if (!config.query) {
     return;
@@ -47,6 +49,13 @@ function queryRule(buffer, matches, state) {
     token.attrs.push([
       "data-excerpt-length",
       state.md.utils.escapeHtml(config.excerptLength),
+    ]);
+  }
+
+  if (config.annotate) {
+    token.attrs.push([
+      "data-annotate",
+      state.md.utils.escapeHtml(config.annotate),
     ]);
   }
 

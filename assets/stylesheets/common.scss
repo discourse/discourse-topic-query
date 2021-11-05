@@ -2,6 +2,12 @@
   background: var(--primary-very-low);
   padding: 1em;
 
+  .query {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 1em;
+  }
+
   ul {
     margin: 0;
     padding-left: 0;

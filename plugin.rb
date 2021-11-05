@@ -73,6 +73,7 @@ after_initialize do
 
       hide_tags = fragment.attributes['data-hide-tags']&.value == 'true'
       hide_category = fragment.attributes['data-hide-category']&.value == 'true'
+      annotate = fragment.attributes['data-annotate']&.value == 'true'
 
       excerpt_length = (fragment.attributes['data-excerpt-length']&.value || 200).to_i
       excerpt_length = [excerpt_length, 300].min
@@ -101,7 +102,18 @@ after_initialize do
       if results.count > 0
         classes = []
         classes << "force-list" if excerpt_length == 0
-        fragment.inner_html = "<ul class=\"#{classes.join(" ")}\">#{results.join}</ul>"
+
+        output = <<~TEMPLATE
+          <ul class=\"#{classes.join(" ")}\">
+        TEMPLATE
+
+        if annotate
+          output += "<a class=\"query\" href=\"/search?expanded=true&q=#{query}\">#{query}</a>"
+        end
+
+        output += results.join + "</ul>"
+
+        fragment.inner_html = output
       end
     end
 

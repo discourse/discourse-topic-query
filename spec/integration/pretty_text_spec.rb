@@ -81,6 +81,17 @@ describe 'plugin post process' do
         end
       end
 
+      context 'annotate=true' do
+        it 'hides the query before the results' do
+          query = "##{tag_1.name}"
+          post_2 = create_post(user: user, raw: "[search-query=\"#{query}\" annotate=true]")
+          post_2.rebake!
+          post_2.reload
+
+          expect(post_2.cooked).to include("<a class=\"query\" href=\"/search?expanded=true&q=#{query}\">#{query}</a>")
+        end
+      end
+
       context 'excerptLength=0' do
         it 'removes the excerpt and forces list' do
           post_2 = create_post(user: user, raw: "[search-query=\"##{tag_1.name}\" excerptLength=0]")
