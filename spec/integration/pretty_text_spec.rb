@@ -88,7 +88,7 @@ describe 'plugin post process' do
           post_2.rebake!
           post_2.reload
 
-          expect(post_2.cooked).to include("<a class=\"query\" href=\"/search?expanded=true&q=#{query}\">#{query}</a>")
+          expect(post_2.cooked).to include("<a class=\"query\" href=\"/search?expanded=true&amp;q=#{query}\">#{query}</a>")
         end
       end
 
