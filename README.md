@@ -5,7 +5,7 @@ Allows to display the results of a search query in a post.
 ## Usage
 
 ```
-[query="foo tags:bar,baz"]
+[search-query="foo tags:bar,baz"]
 ```
 
 ### Options

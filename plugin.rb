@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # name: discourse-topic-query
-# about: Allows to list specific topics in a post using [query=query ...params]
+# about: Allows to list specific topics in a post using [search-query=query ...params]
 # version: 0.0.1
 # authors: j.jaffeux
 # required_version: 2.7.0

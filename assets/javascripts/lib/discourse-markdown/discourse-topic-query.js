@@ -12,9 +12,9 @@ function queryRule(buffer, matches, state) {
   const matchString = matches[1].replace(/‘|’|„|“|«|»|”/g, '"');
 
   let parsed = parseBBCodeTag(
-    "[query query" + matchString + "]",
+    "[search-query query" + matchString + "]",
     0,
-    matchString.length + 13
+    matchString.length + 20
   );
 
   config.query = parsed.attrs.query;
@@ -66,7 +66,7 @@ export function setup(helper) {
 
   helper.registerPlugin((md) => {
     const rule = {
-      matcher: /\[query(=.+?)\]/,
+      matcher: /\[search-query(=.+?)\]/,
       onMatch: queryRule,
     };
 

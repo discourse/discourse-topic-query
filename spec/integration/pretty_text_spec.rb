@@ -43,7 +43,7 @@ describe 'plugin post process' do
 
     context 'with query' do
       it 'processes the query' do
-        post_2 = create_post(user: user, raw: "[query=\"##{tag_1.name}\"]")
+        post_2 = create_post(user: user, raw: "[search-query=\"##{tag_1.name}\"]")
         post_2.rebake!
         post_2.reload
 
@@ -70,7 +70,7 @@ describe 'plugin post process' do
 
       context 'hideTags=true' do
         it 'hides the tags' do
-          post_2 = create_post(user: user, raw: "[query=\"##{tag_1.name}\" hideTags=true]")
+          post_2 = create_post(user: user, raw: "[search-query=\"##{tag_1.name}\" hideTags=true]")
           post_2.rebake!
           post_2.reload
 
@@ -83,7 +83,7 @@ describe 'plugin post process' do
 
       context 'excerptLength=0' do
         it 'removes the excerpt and forces list' do
-          post_2 = create_post(user: user, raw: "[query=\"##{tag_1.name}\" excerptLength=0]")
+          post_2 = create_post(user: user, raw: "[search-query=\"##{tag_1.name}\" excerptLength=0]")
           post_2.rebake!
           post_2.reload
 
@@ -94,7 +94,7 @@ describe 'plugin post process' do
 
       context 'hideCategory=true' do
         it 'hides the category' do
-          post_2 = create_post(user: user, raw: "[query=\"##{tag_1.name}\" hideCategory=false]")
+          post_2 = create_post(user: user, raw: "[search-query=\"##{tag_1.name}\" hideCategory=false]")
           post_2.rebake!
           post_2.reload
 
@@ -107,7 +107,7 @@ describe 'plugin post process' do
 
       context 'hideCategory=true and hideTag=true' do
         it 'hides the category' do
-          post_2 = create_post(user: user, raw: "[query=\"##{tag_1.name}\" hideCategory=false hideTag=true]")
+          post_2 = create_post(user: user, raw: "[search-query=\"##{tag_1.name}\" hideCategory=false hideTag=true]")
           post_2.rebake!
           post_2.reload
 
@@ -121,7 +121,7 @@ describe 'plugin post process' do
 
   context 'rebaking all posts with topic query' do
     it 'rebakes the post' do
-      post = create_post(user: user, raw: "[query=\"##{tag_1.name}\"]")
+      post = create_post(user: user, raw: "[search-query=\"##{tag_1.name}\"]")
       post.rebake!
       post.reload
 
@@ -148,7 +148,7 @@ describe 'plugin post process' do
       end
 
       it 'processes the post' do
-        post = create_post(user: user, raw: "[query=\"##{tag_1.name}\"]")
+        post = create_post(user: user, raw: "[search-query=\"##{tag_1.name}\"]")
         post.rebake!
         post.reload
 
@@ -158,7 +158,7 @@ describe 'plugin post process' do
 
     context 'is not member of allowed groups' do
       it 'processes the post' do
-        post = create_post(user: user, raw: "[query=\"##{tag_1.name}\"]")
+        post = create_post(user: user, raw: "[search-query=\"##{tag_1.name}\"]")
 
         expect(post.cooked).to_not include(post_1.topic.title)
       end
